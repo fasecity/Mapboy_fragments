@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        //instansiate markers
+        ///instansiate markers
         mp = new MarkerOptions()
                 .position(new LatLng(43.656729, -79.377162)).title("Home");
 
