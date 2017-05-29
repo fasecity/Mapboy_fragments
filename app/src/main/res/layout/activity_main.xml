@@ -13,8 +13,6 @@
         android:layout_width="368dp"
         android:layout_height="400dp"
         map:cameraBearing="112.5"
-        map:cameraTargetLat="40.7484"
-        map:cameraTargetLng="-73.9857"
         map:cameraTilt="65"
         map:cameraZoom="17"
 
