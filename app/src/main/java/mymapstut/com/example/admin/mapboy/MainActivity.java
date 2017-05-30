@@ -1,11 +1,17 @@
 package mymapstut.com.example.admin.mapboy;
 
 import android.graphics.Color;
+import android.location.Geocoder;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 
+import com.google.android.gms.identity.intents.Address;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -16,6 +22,9 @@ import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
+
+import java.io.IOException;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -41,6 +50,24 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         md = new MarkerOptions()
                 .position(new LatLng(43.733092, -79.264254)).title("Dad's");
 
+
+        //button for search & input
+
+        Button searchBtn = (Button) findViewById(R.id.searchbtn);
+        searchBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mapReady) {
+                    try {
+                        geoLocate(v);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+
+        ///////////////////////////
         //buttons
         Button satBtn = (Button) findViewById(R.id.Satilitebtn);
         satBtn.setOnClickListener(new View.OnClickListener() {
@@ -91,7 +118,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         LatLng latLngToronto = new LatLng(43.733092, -79.264254);
         LatLng latLnghome = new LatLng(43.656729, -79.377162);
 
-        CameraPosition target = CameraPosition.builder().target(latLngToronto).zoom(10).tilt(65).build();
+        CameraPosition target = CameraPosition.builder().target(latLngToronto).zoom(5).tilt(65).build();
         mMap.moveCamera(CameraUpdateFactory.newCameraPosition(target));
         mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
 
@@ -108,6 +135,50 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         googleMap.addCircle(new CircleOptions().center(latLngToronto)
                 .radius(10000)
                 .strokeColor(Color.green(6)).fillColor(Color.argb(64,0,255,0)));
+
+    }
+    //go to location method
+    private  void goToLocation(double lat,double lng,float zoom){
+        mapReady= true;
+        LatLng latlng = new LatLng(lat,lng);
+        CameraPosition target = CameraPosition.builder().target(latlng).zoom(zoom).tilt(40).build();
+         mMap.moveCamera(CameraUpdateFactory.newCameraPosition(target));
+         mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+
+    }
+    //hides keyoard
+    private void hideSoftKeyboard(View v){
+        InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(v.getWindowToken(),0);
+    }
+    //geocoder method
+    public void geoLocate(View view) throws IOException {
+        hideSoftKeyboard(view);
+        EditText inputTxt = (EditText) findViewById(R.id.editText);
+
+        String searchString = inputTxt.getText().toString();
+
+        Geocoder gc = new Geocoder(this);//thows exeption change method signiture
+        List<android.location.Address> list = gc.getFromLocationName(searchString,1);
+
+        if (list.size()>0){
+            //get address from list index 0
+            android.location.Address address = list.get(0);
+
+            //get name of adress
+            String locality = address.getLocality();
+
+            Toast.makeText(this, "You searched: " + locality, Toast.LENGTH_SHORT).show();
+
+            //get lang ang lng from adtress
+            double lat = address.getLatitude();
+            double lng = address.getLongitude();
+
+            goToLocation(lat,lng,15);
+
+
+        }
+
 
 
     }
