@@ -42,24 +42,28 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import java.io.IOException;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements OnMapReadyCallback,
-        GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener, LocationListener {
+public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
+
+   //////////////////////////////---Instance variables-----///////////////////////////////////////
     //permisission vars
     public static final int MY_LOCATION_PERMMISSION = 101;
-    private boolean permissionIsGranted=false;
-    //map vars
+    private boolean permissionIsGranted = false;
+
+    /////////------map vars---/////////////////////
     GoogleMap mMap;
     boolean mapReady = false;
     MarkerOptions mp;
     MarkerOptions md;
-    //loctaion services vars////////////////////////
+
+    ///////////-----loctaion services vars-------/////
     private final String LOG_TAG = "Moes_testapp";
     private TextView txtoutput;
     private GoogleApiClient mGoogleapiClient;
     private LocationRequest mLocationRequest;
-    /////////////////////////////////////////////////
 
+    ////////////////////////////////--------/////////////////////////////////////////////////////
+
+    ////////////////////////////////////------OnCreate Method---/////////////////////////////////
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,21 +73,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        //PERMISION SETTINGGS
-        Button pembtn = (Button) findViewById(R.id.permbtn);
-        pembtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    requestPermissions(new String [] {Manifest.permission.ACCESS_FINE_LOCATION},MY_LOCATION_PERMMISSION );
-                }
-                else{
-                    permissionIsGranted = true;
-                }
-
-            }
-        });
-
         // instatiate mylocation client needs this context and a builder()
         mGoogleapiClient = new GoogleApiClient.Builder(this)
                 .addApi(LocationServices.API)
@@ -91,9 +80,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .addOnConnectionFailedListener(this)
                 .build();
         txtoutput = (TextView) findViewById(R.id.txtOutput);
-
-        // mGoogleapiClient.connect();
-
 
         ///instansiate markers add icon method to make custom markers
         mp = new MarkerOptions()
@@ -105,7 +91,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
         //button for search & input
-
         Button searchBtn = (Button) findViewById(R.id.searchbtn);
         searchBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -119,17 +104,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 }
             }
         });
-
-        ///////////////////////////
-
-        //buttons
+        //buttons  reg
         Button satBtn = (Button) findViewById(R.id.Satilitebtn);
         satBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mapReady) {
-                     mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
-
+                    locatabro();
+                    mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
                 }
             }
         });
@@ -138,34 +120,36 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void onClick(View v) {
                 if (mapReady) {
-
-                    LatLng latLngToronto = new LatLng(43.733092, -79.264254);
-                    CameraPosition target = CameraPosition.builder().target(latLngToronto).zoom(17).tilt(65).build();
-                    mMap.animateCamera(CameraUpdateFactory.newCameraPosition(target), 5000, null);
-                    // mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+                    goToLocation(43.733092, -79.264254,17);
                     mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
-
                 }
             }
         });
-
         Button hybridBtn = (Button) findViewById(R.id.HybridBtn);
         hybridBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mapReady) {
-                    LatLng latLngToronto = new LatLng(43.656729, -79.377162);
-                    CameraPosition target = CameraPosition.builder().target(latLngToronto).zoom(17).tilt(65).build();
-                    mMap.animateCamera(CameraUpdateFactory.newCameraPosition(target), 5000, null);
+                    goToLocation(43.656729, -79.377162,17);
                     mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
-
+                }
+            }
+        });
+        //PERMISION SETTINGGS button
+        Button pembtn = (Button) findViewById(R.id.permbtn);
+        pembtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, MY_LOCATION_PERMMISSION);
+                } else {
+                    permissionIsGranted = true;
                 }
             }
         });
 
-
     }
-
+///////////////////////////////////////////////////---Methods--???????????????????????????????????
     @Override
     protected void onStart() {
         super.onStart();
@@ -272,7 +256,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             // to handle the case where the user grants the permission. See the documentation
             // for ActivityCompat#requestPermissions for more details.
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                requestPermissions(new String [] {Manifest.permission.ACCESS_FINE_LOCATION},MY_LOCATION_PERMMISSION );
+                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, MY_LOCATION_PERMMISSION);
             }
 
             return;
@@ -285,21 +269,17 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         switch (requestCode) {
             case MY_LOCATION_PERMMISSION:
-                if(grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     permissionIsGranted = true;
                     Toast.makeText(this, "Loacation permission Granted", Toast.LENGTH_SHORT).show();
-                }
-                else {
-                    permissionIsGranted=false;
+                } else {
+                    permissionIsGranted = false;
                     Toast.makeText(this, "Loacation permission NOT! Granted", Toast.LENGTH_SHORT).show();
                     txtoutput.setText("Permsission not granted");
 
                 }
                 break;
         }
-
-
-
 
     }
 
@@ -318,8 +298,42 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onLocationChanged(Location location) {
 
-    double lat = location.getLatitude();
-     double lng = location.getLongitude();
+        double lat = location.getLatitude();
+        double lng = location.getLongitude();
         txtoutput.setText(lat + "," + lng);
+
+        // LatLng latLngToronto = new LatLng(lat,lng);
+        // CameraPosition target = CameraPosition.builder().target(latLngToronto).zoom(17).tilt(65).build();
+        // mMap.animateCamera(CameraUpdateFactory.newCameraPosition(target), 5000, null);
+
+    }
+
+    private void locatabro() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        Location currentLocation = LocationServices.FusedLocationApi
+                .getLastLocation(mGoogleapiClient);
+        double lat = currentLocation.getLatitude();
+        double lng = currentLocation.getLongitude();
+
+        if (currentLocation == null){
+                 Toast.makeText(this, "Cant connect", Toast.LENGTH_SHORT).show();
+        }
+        else{
+            LatLng latLngToronto = new LatLng(lat,lng);
+            CameraPosition target = CameraPosition.builder().target(latLngToronto).zoom(17).tilt(65).build();
+            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(target), 5000, null);
+        }
+        txtoutput.setText(lat + "," + lng);
+        Toast.makeText(this, "finished", Toast.LENGTH_SHORT).show();
+
     }
 }
