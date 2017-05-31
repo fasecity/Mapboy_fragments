@@ -11,12 +11,14 @@
         android:id="@+id/map"
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
-        android:layout_height="304dp"
+        android:layout_height="255dp"
         android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginLeft="8dp"
+
+
         android:layout_marginRight="8dp"
-
-
+        android:layout_marginStart="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -24,7 +26,7 @@
         map:cameraBearing="112.5"
         map:cameraTilt="65"
         map:cameraZoom="17"
-        tools:layout_editor_absoluteY="199dp" />
+        tools:layout_editor_absoluteY="248dp" />
 
     <Button
         android:id="@+id/Satilitebtn"
@@ -34,7 +36,8 @@
         android:layout_marginTop="26dp"
         android:text="Satelite"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginStart="16dp" />
 
     <Button
         android:id="@+id/RoadBtn"
@@ -44,7 +47,8 @@
         android:layout_marginTop="26dp"
         android:text="Road"
         app:layout_constraintLeft_toRightOf="@+id/Satilitebtn"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginStart="44dp" />
 
     <Button
         android:id="@+id/HybridBtn"
@@ -57,7 +61,9 @@
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintLeft_toRightOf="@+id/RoadBtn"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="16dp" />
 
     <EditText
         android:id="@+id/editText"
@@ -69,7 +75,8 @@
         android:inputType="textPersonName"
         android:text="Enter location"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/Satilitebtn" />
+        app:layout_constraintTop_toBottomOf="@+id/Satilitebtn"
+        android:layout_marginStart="16dp" />
 
     <Button
         android:id="@+id/searchbtn"
@@ -79,7 +86,32 @@
         android:text="search"
         app:layout_constraintBaseline_toBaselineOf="@+id/editText"
         app:layout_constraintRight_toRightOf="parent"
-        android:onClick="geoLocate"/>
+        android:onClick="geoLocate"
+        android:layout_marginEnd="16dp" />
+
+    <TextView
+        android:id="@+id/txtOutput"
+        android:layout_width="181dp"
+        android:layout_height="62dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="13dp"
+        android:text="TextView"
+        android:textSize="12sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editText" />
+
+    <Button
+        android:id="@+id/permbtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:text="setpem"
+        app:layout_constraintLeft_toRightOf="@+id/txtOutput"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginTop="26dp"
+        app:layout_constraintTop_toBottomOf="@+id/searchbtn"
+        app:layout_constraintHorizontal_bias="0.522" />
 
 
 </android.support.constraint.ConstraintLayout>
